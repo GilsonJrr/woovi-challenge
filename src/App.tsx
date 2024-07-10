@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import PaymentMethod from "./pages/PaymentMethod";
+import PixCreditCard from "./pages/PixCreditCard";
+import { installmentType } from "./types";
+import PixCreditCardForm from "./pages/PixCreditCardForm";
+import Button from "./components/Button";
 
 function App() {
+  const [selectedInstallments, setSelectedInstallments] =
+    useState<installmentType>();
+
+  const [page, setPage] = useState("PaymentMethod");
+
+  const handleOnclick = (value: installmentType) => {
+    setSelectedInstallments(value);
+    setTimeout(() => {
+      setPage(value.id === 100 ? "PixCreditCard" : "PixCreditCardForm");
+    }, 500);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {page === "PaymentMethod" ? (
+        <PaymentMethod
+          onClick={(value: installmentType) => handleOnclick(value)}
+        />
+      ) : page === "PixCreditCard" ? (
+        <PixCreditCard installments={selectedInstallments} />
+      ) : page === "PixCreditCardForm" ? (
+        <PixCreditCardForm installments={selectedInstallments} />
+      ) : null}
+      {/* to navigate between pages */}
+      {page !== "PaymentMethod" && (
+        <Button onClick={() => setPage("PaymentMethod")}>Voltar</Button>
+      )}
+    </>
   );
 }
 
